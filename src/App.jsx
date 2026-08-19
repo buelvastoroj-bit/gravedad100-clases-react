@@ -24,6 +24,7 @@ const VISTA = {
 export default function App() {
   const {
     clases,
+    cargando,
     mensaje,
     programarClase,
     actualizarClase,
@@ -54,13 +55,11 @@ export default function App() {
   }
 
   function manejarGuardarNueva(datos) {
-    programarClase(datos);
-    irAlListado();
+    programarClase(datos).then(irAlListado);
   }
 
   function manejarGuardarEdicion(datos) {
-    actualizarClase(idEnEdicion, datos);
-    irAlListado();
+    actualizarClase(idEnEdicion, datos).then(irAlListado);
   }
 
   function manejarSolicitarEliminar(idClase) {
@@ -86,36 +85,42 @@ export default function App() {
       <main className="contenido">
         <MensajeAlerta mensaje={mensaje} />
 
-        {vista === VISTA.LISTADO && (
-          <ListadoClases
-            clases={clases}
-            onEditar={manejarEditar}
-            onSolicitarEliminar={manejarSolicitarEliminar}
-            onProgramarNueva={manejarProgramarNueva}
-          />
-        )}
+        {cargando && vista === VISTA.LISTADO ? (
+          <p className="listado-clases__contador">Cargando clases desde la API...</p>
+        ) : (
+          <>
+            {vista === VISTA.LISTADO && (
+              <ListadoClases
+                clases={clases}
+                onEditar={manejarEditar}
+                onSolicitarEliminar={manejarSolicitarEliminar}
+                onProgramarNueva={manejarProgramarNueva}
+              />
+            )}
 
-        {vista === VISTA.NUEVA && (
-          <FormularioClase onGuardar={manejarGuardarNueva} onCancelar={irAlListado} />
-        )}
+            {vista === VISTA.NUEVA && (
+              <FormularioClase onGuardar={manejarGuardarNueva} onCancelar={irAlListado} />
+            )}
 
-        {vista === VISTA.EDITAR &&
-          (claseEnEdicion ? (
-            <FormularioClase
-              claseInicial={claseEnEdicion}
-              onGuardar={manejarGuardarEdicion}
-              onCancelar={irAlListado}
-            />
-          ) : (
-            // Caso HU-06: id inexistente. En vez de romper la interfaz,
-            // se informa el error y se ofrece volver al listado.
-            <div className="alerta alerta--error">
-              No existe una clase con id {idEnEdicion}.{" "}
-              <button type="button" className="enlace" onClick={irAlListado}>
-                Volver al listado
-              </button>
-            </div>
-          ))}
+            {vista === VISTA.EDITAR &&
+              (claseEnEdicion ? (
+                <FormularioClase
+                  claseInicial={claseEnEdicion}
+                  onGuardar={manejarGuardarEdicion}
+                  onCancelar={irAlListado}
+                />
+              ) : (
+                // Caso HU-06: id inexistente. En vez de romper la interfaz,
+                // se informa el error y se ofrece volver al listado.
+                <div className="alerta alerta--error">
+                  No existe una clase con id {idEnEdicion}.{" "}
+                  <button type="button" className="enlace" onClick={irAlListado}>
+                    Volver al listado
+                  </button>
+                </div>
+              ))}
+          </>
+        )}
       </main>
 
       {idParaEliminar != null && (

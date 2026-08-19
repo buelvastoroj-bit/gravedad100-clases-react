@@ -1,90 +1,103 @@
-import { useState, useCallback } from "react";
-import { CLASES_INICIALES } from "../data/clasesIniciales.js";
-import { crearClaseGrupal } from "../data/ClaseGrupal.js";
+import { useState, useCallback, useEffect } from "react";
+import * as clasesApi from "../api/clasesApi.js";
 
 /**
  * Hook personalizado que centraliza el estado y las operaciones sobre las
  * clases grupales (listar, programar, editar, eliminar).
  *
- * Cumple, en el frontend, el mismo rol que ClaseServicio cumple en el
- * backend: aisla la logica de negocio de los componentes de presentacion,
- * para que ListadoClases y FormularioClase solo se preocupen de mostrar
- * datos y capturar eventos del usuario.
+ * A partir de la evidencia GA8_AA1_EV01 (integracion de modulos), este
+ * hook consume la API REST real construida en AA5_EV03
+ * (com.gravedad100-api) en lugar de mantener los datos en memoria local,
+ * como se hacia en la version inicial del componente (AA4_EV03). La
+ * interfaz publica del hook (los nombres de las funciones que devuelve)
+ * se mantuvo igual a proposito, para que los componentes de presentacion
+ * (ListadoClases, FormularioClase, App) no tuvieran que cambiar.
  *
  * @returns {{
  *   clases: Array,
+ *   cargando: boolean,
  *   mensaje: {tipo: 'exito'|'error', texto: string}|null,
- *   programarClase: (datos: Object) => void,
- *   actualizarClase: (id: number, datos: Object) => void,
- *   eliminarClase: (id: number) => void,
+ *   programarClase: (datos: Object) => Promise<void>,
+ *   actualizarClase: (id: number, datos: Object) => Promise<void>,
+ *   eliminarClase: (id: number) => Promise<void>,
  *   buscarClasePorId: (id: number) => Object|undefined,
  *   limpiarMensaje: () => void
  * }}
  */
 export function useClases() {
-  const [clases, setClases] = useState(CLASES_INICIALES);
-  const [siguienteId, setSiguienteId] = useState(CLASES_INICIALES.length + 1);
+  const [clases, setClases] = useState([]);
+  const [cargando, setCargando] = useState(true);
   const [mensaje, setMensaje] = useState(null);
 
-  /** Busca una clase por id. Equivale a ClaseRepositorio.consultarPorId. */
+  /** Vuelve a pedir el listado completo a la API. */
+  const recargarClases = useCallback(async () => {
+    try {
+      const { clases: clasesRecibidas } = await clasesApi.obtenerClases();
+      setClases(clasesRecibidas);
+    } catch (error) {
+      setMensaje({
+        tipo: "error",
+        texto: `No se pudo conectar con la API (${error.message}). Verifica que el servidor esté corriendo en http://localhost:3000.`,
+      });
+    } finally {
+      setCargando(false);
+    }
+  }, []);
+
+  // Carga inicial del listado al montar el componente.
+  useEffect(() => {
+    recargarClases();
+  }, [recargarClases]);
+
+  /** Busca una clase por id dentro de lo ya cargado en memoria. */
   const buscarClasePorId = useCallback(
     (id) => clases.find((clase) => clase.idClase === id),
     [clases]
   );
 
-  /** Programa (crea) una nueva clase grupal. */
-  const programarClase = useCallback(
-    (datos) => {
-      const nuevaClase = crearClaseGrupal(datos, siguienteId);
-      setClases((actuales) => [...actuales, nuevaClase]);
-      setSiguienteId((id) => id + 1);
+  /** Programa (crea) una nueva clase grupal a traves de la API. */
+  const programarClase = useCallback(async (datos) => {
+    try {
+      await clasesApi.crearClase(datos);
       setMensaje({ tipo: "exito", texto: "Clase programada correctamente." });
-    },
-    [siguienteId]
-  );
+      await recargarClases();
+    } catch (error) {
+      setMensaje({ tipo: "error", texto: error.message });
+    }
+  }, [recargarClases]);
 
   /**
-   * Actualiza una clase existente. Si el id no existe (por ejemplo, un
-   * enlace desactualizado), se informa el error en lugar de fallar de
-   * forma silenciosa, replicando el manejo de ClaseNoEncontradaException
-   * del backend (HU-06).
+   * Actualiza una clase existente a traves de la API. Si el id no existe
+   * (por ejemplo, un enlace desactualizado), la API responde 404 y ese
+   * mensaje se muestra tal cual, replicando el manejo de
+   * ClaseNoEncontradaException del backend original (HU-06).
    */
-  const actualizarClase = useCallback(
-    (id, datos) => {
-      if (!buscarClasePorId(id)) {
-        setMensaje({ tipo: "error", texto: `No existe una clase con id ${id}` });
-        return;
-      }
-      setClases((actuales) =>
-        actuales.map((clase) =>
-          clase.idClase === id
-            ? {
-                ...clase,
-                nombre: datos.nombre.trim(),
-                entrenador: datos.entrenador.trim(),
-                diaSemana: datos.diaSemana,
-                horaInicio: datos.horaInicio,
-                horaFin: datos.horaFin,
-                cupoMaximo: Number(datos.cupoMaximo),
-              }
-            : clase
-        )
-      );
+  const actualizarClase = useCallback(async (id, datos) => {
+    try {
+      await clasesApi.actualizarClase(id, datos);
       setMensaje({ tipo: "exito", texto: "Clase actualizada correctamente." });
-    },
-    [buscarClasePorId]
-  );
+      await recargarClases();
+    } catch (error) {
+      setMensaje({ tipo: "error", texto: error.message });
+    }
+  }, [recargarClases]);
 
-  /** Elimina una clase por id. */
-  const eliminarClase = useCallback((id) => {
-    setClases((actuales) => actuales.filter((clase) => clase.idClase !== id));
-    setMensaje({ tipo: "exito", texto: "Clase eliminada correctamente." });
-  }, []);
+  /** Elimina una clase por id a traves de la API. */
+  const eliminarClase = useCallback(async (id) => {
+    try {
+      await clasesApi.eliminarClase(id);
+      setMensaje({ tipo: "exito", texto: "Clase eliminada correctamente." });
+      await recargarClases();
+    } catch (error) {
+      setMensaje({ tipo: "error", texto: error.message });
+    }
+  }, [recargarClases]);
 
   const limpiarMensaje = useCallback(() => setMensaje(null), []);
 
   return {
     clases,
+    cargando,
     mensaje,
     programarClase,
     actualizarClase,
