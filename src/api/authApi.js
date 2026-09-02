@@ -4,7 +4,12 @@
  *
  * Sigue el mismo patron que clasesApi.js: centraliza el manejo de
  * errores HTTP, lanzando un Error con el mensaje que devuelve la API.
+ *
+ * A partir de esta version, iniciarSesion guarda el token recibido en
+ * sesion.js, para que clasesApi.js lo pueda usar automaticamente en las
+ * peticiones que lo requieren.
  */
+import { establecerToken } from "./sesion.js";
 
 const URL_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
@@ -30,10 +35,12 @@ export function registrarUsuario(usuario, contrasena) {
   });
 }
 
-/** POST /api/login -> { mensaje } */
-export function iniciarSesion(usuario, contrasena) {
-  return solicitar("/api/login", {
+/** POST /api/login -> { mensaje, token }. Guarda el token recibido. */
+export async function iniciarSesion(usuario, contrasena) {
+  const respuesta = await solicitar("/api/login", {
     method: "POST",
     body: JSON.stringify({ usuario, contrasena }),
   });
+  establecerToken(respuesta.token);
+  return respuesta;
 }
