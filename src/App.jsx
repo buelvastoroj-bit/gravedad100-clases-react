@@ -1,29 +1,35 @@
 import { useState } from "react";
 import { useClases } from "./hooks/useClases.js";
 import { useAuth } from "./hooks/useAuth.js";
+import { useClientes } from "./hooks/useClientes.js";
 import ListadoClases from "./components/ListadoClases.jsx";
 import FormularioClase from "./components/FormularioClase.jsx";
+import ListadoClientes from "./components/ListadoClientes.jsx";
+import FormularioCliente from "./components/FormularioCliente.jsx";
 import FormularioLogin from "./components/FormularioLogin.jsx";
 import FormularioRegistro from "./components/FormularioRegistro.jsx";
 import ModalConfirmacion from "./components/ModalConfirmacion.jsx";
 import MensajeAlerta from "./components/MensajeAlerta.jsx";
 
-/** Vistas posibles del modulo, equivalentes a las rutas del backend. */
 const VISTA = {
   LOGIN: "login",
   REGISTRO: "registro",
-  LISTADO: "listado", // GET /clases
-  NUEVA: "nueva", // GET /clases/nueva
-  EDITAR: "editar", // GET /clases/editar/{id}
+  LISTADO: "listado",
+  NUEVA: "nueva",
+  EDITAR: "editar",
+  LISTADO_CLIENTES: "listadoClientes",
+  NUEVO_CLIENTE: "nuevoCliente",
+};
+
+const MODULO = {
+  CLASES: "clases",
+  CLIENTES: "clientes",
 };
 
 /**
- * Componente raiz del modulo "Clases y horarios" en React.
- *
- * A partir de esta version, el acceso al listado de clases requiere
- * autenticacion (evidencia de integracion del modulo Autenticacion,
- * ya construido en la API desde AA5_EV01, con una interfaz propia en
- * React).
+ * Componente raiz de la aplicacion. A partir de esta version, incluye
+ * dos modulos accesibles tras iniciar sesion: Clases y horarios, y
+ * Recepcion de clientes (RF-01).
  */
 export default function App() {
   const {
@@ -47,11 +53,20 @@ export default function App() {
     limpiarMensaje,
   } = useClases();
 
+  const {
+    clientes,
+    cargando: cargandoClientes,
+    mensaje: mensajeClientes,
+    registrarCliente,
+    registrarCheckin,
+    limpiarMensaje: limpiarMensajeClientes,
+  } = useClientes();
+
+  const [moduloActivo, setModuloActivo] = useState(MODULO.CLASES);
   const [vista, setVista] = useState(VISTA.LOGIN);
   const [idEnEdicion, setIdEnEdicion] = useState(null);
   const [idParaEliminar, setIdParaEliminar] = useState(null);
 
-  /** Vuelve al listado y limpia cualquier seleccion pendiente. */
   function irAlListado() {
     setVista(VISTA.LISTADO);
     setIdEnEdicion(null);
@@ -88,13 +103,28 @@ export default function App() {
   function manejarCerrarSesion() {
     cerrarSesion();
     setVista(VISTA.LOGIN);
+    setModuloActivo(MODULO.CLASES);
   }
 
   async function manejarIniciarSesion(usuario, contrasena) {
     await iniciarSesion(usuario, contrasena);
   }
 
-  // Una vez autenticado con exito, pasa automaticamente al listado.
+  function irAModuloClases() {
+    setModuloActivo(MODULO.CLASES);
+    setVista(VISTA.LISTADO);
+  }
+
+  function irAModuloClientes() {
+    limpiarMensajeClientes();
+    setModuloActivo(MODULO.CLIENTES);
+    setVista(VISTA.LISTADO_CLIENTES);
+  }
+
+  function manejarRegistrarClienteNuevo(datos) {
+    registrarCliente(datos).then(() => setVista(VISTA.LISTADO_CLIENTES));
+  }
+
   if (autenticado && vista === VISTA.LOGIN) {
     setVista(VISTA.LISTADO);
   }
@@ -108,17 +138,21 @@ export default function App() {
           GRAVEDAD<span className="cabecera__acento">100</span>
         </h1>
         <p className="cabecera__subtitulo">
-          {autenticado ? "Clases y horarios · Componente React" : "Acceso al sistema"}
+          {autenticado ? "Componente React" : "Acceso al sistema"}
         </p>
+
         {autenticado && (
-          <button
-            type="button"
-            className="enlace"
-            style={{ marginTop: "0.5rem" }}
-            onClick={manejarCerrarSesion}
-          >
-            Cerrar sesion
-          </button>
+          <nav style={{ marginTop: "0.75rem", display: "flex", gap: "1rem", justifyContent: "center" }}>
+            <button type="button" className="enlace" onClick={irAModuloClases}>
+              Clases y horarios
+            </button>
+            <button type="button" className="enlace" onClick={irAModuloClientes}>
+              Recepción de clientes
+            </button>
+            <button type="button" className="enlace" onClick={manejarCerrarSesion}>
+              Cerrar sesion
+            </button>
+          </nav>
         )}
       </header>
 
@@ -146,10 +180,30 @@ export default function App() {
               />
             )}
           </>
+        ) : moduloActivo === MODULO.CLIENTES ? (
+          <>
+            <MensajeAlerta mensaje={mensajeClientes} />
+            {cargandoClientes && vista === VISTA.LISTADO_CLIENTES ? (
+              <p className="listado-clases__contador">Cargando clientes desde la API...</p>
+            ) : vista === VISTA.NUEVO_CLIENTE ? (
+              <FormularioCliente
+                onRegistrar={manejarRegistrarClienteNuevo}
+                onCancelar={() => setVista(VISTA.LISTADO_CLIENTES)}
+              />
+            ) : (
+              <ListadoClientes
+                clientes={clientes}
+                onCheckin={registrarCheckin}
+                onRegistrarNuevo={() => {
+                  limpiarMensajeClientes();
+                  setVista(VISTA.NUEVO_CLIENTE);
+                }}
+              />
+            )}
+          </>
         ) : (
           <>
             <MensajeAlerta mensaje={mensaje} />
-
             {cargando && vista === VISTA.LISTADO ? (
               <p className="listado-clases__contador">Cargando clases desde la API...</p>
             ) : (
@@ -198,9 +252,8 @@ export default function App() {
       )}
 
       <footer className="pie">
-        Gravedad100 · Modulo de Clases y horarios · React JS + Vite
+        Gravedad100 · React JS + Vite
       </footer>
     </div>
   );
 }
-    
