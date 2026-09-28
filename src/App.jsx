@@ -17,6 +17,7 @@ import FormularioLogin from "./components/FormularioLogin.jsx";
 import FormularioRegistro from "./components/FormularioRegistro.jsx";
 import ModalConfirmacion from "./components/ModalConfirmacion.jsx";
 import MensajeAlerta from "./components/MensajeAlerta.jsx";
+import IndicadorCarga from "./components/IndicadorCarga.jsx";
 
 const VISTA = {
   LOGIN: "login", REGISTRO: "registro",
@@ -105,14 +106,38 @@ export default function App() {
         <p className="cabecera__subtitulo">{autenticado ? "Componente React" : "Acceso al sistema"}</p>
 
         {autenticado && (
-          <nav style={{ marginTop: "0.75rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <button type="button" className="enlace" onClick={irAModuloClases}>Clases y horarios</button>
-            <button type="button" className="enlace" onClick={irAModuloClientes}>Recepción de clientes</button>
-            <button type="button" className="enlace" onClick={irAModuloEntrenamiento}>Entrenamiento personalizado</button>
-            <button type="button" className="enlace" onClick={irAModuloAtencion}>Atención al cliente</button>
-            <button type="button" className="enlace" onClick={manejarCerrarSesion}>Cerrar sesion</button>
-          </nav>
-        )}
+  <nav className="navegacion-principal" style={{ marginTop: "0.75rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+    <button
+      type="button"
+      className={`enlace ${moduloActivo === MODULO.CLASES ? "enlace--activo" : ""}`}
+      onClick={irAModuloClases}
+    >
+      Clases y horarios
+    </button>
+    <button
+      type="button"
+      className={`enlace ${moduloActivo === MODULO.CLIENTES ? "enlace--activo" : ""}`}
+      onClick={irAModuloClientes}
+    >
+      Recepción de clientes
+    </button>
+    <button
+      type="button"
+      className={`enlace ${moduloActivo === MODULO.ENTRENAMIENTO ? "enlace--activo" : ""}`}
+      onClick={irAModuloEntrenamiento}
+    >
+      Entrenamiento personalizado
+    </button>
+    <button
+      type="button"
+      className={`enlace ${moduloActivo === MODULO.ATENCION ? "enlace--activo" : ""}`}
+      onClick={irAModuloAtencion}
+    >
+      Atención al cliente
+    </button>
+    <button type="button" className="enlace" onClick={manejarCerrarSesion}>Cerrar sesion</button>
+  </nav>
+)}
       </header>
 
       <main className="contenido">
@@ -137,7 +162,7 @@ export default function App() {
           <>
             <MensajeAlerta mensaje={mensajeClientes} />
             {cargandoClientes && vista === VISTA.LISTADO_CLIENTES ? (
-              <p className="listado-clases__contador">Cargando clientes desde la API...</p>
+              <IndicadorCarga texto="Cargando clientes desde la API..." />
             ) : vista === VISTA.NUEVO_CLIENTE ? (
               <FormularioCliente onRegistrar={manejarRegistrarClienteNuevo} onCancelar={() => setVista(VISTA.LISTADO_CLIENTES)} />
             ) : (
@@ -152,7 +177,7 @@ export default function App() {
           <>
             <MensajeAlerta mensaje={mensajePlanes} />
             {cargandoPlanes && vista === VISTA.LISTADO_PLANES ? (
-              <p className="listado-clases__contador">Cargando planes desde la API...</p>
+              <IndicadorCarga texto="Cargando planes desde la API..." />
             ) : vista === VISTA.NUEVO_PLAN ? (
               <FormularioPlanEntrenamiento clientes={clientes} onCrear={crearPlan} onCancelar={() => setVista(VISTA.LISTADO_PLANES)} />
             ) : (
@@ -167,7 +192,7 @@ export default function App() {
           <>
             <MensajeAlerta mensaje={mensajeSolicitudes} />
             {cargandoSolicitudes && vista === VISTA.LISTADO_SOLICITUDES ? (
-              <p className="listado-clases__contador">Cargando solicitudes desde la API...</p>
+              <IndicadorCarga texto="Cargando solicitudes desde la API..." />
             ) : vista === VISTA.NUEVA_SOLICITUD ? (
               <FormularioSolicitud clientes={clientes} onRegistrar={registrarSolicitud} onCancelar={() => setVista(VISTA.LISTADO_SOLICITUDES)} />
             ) : (
@@ -182,7 +207,7 @@ export default function App() {
           <>
             <MensajeAlerta mensaje={mensaje} />
             {cargando && vista === VISTA.LISTADO ? (
-              <p className="listado-clases__contador">Cargando clases desde la API...</p>
+              <IndicadorCarga texto="Cargando clases desde la API..." />
             ) : (
               <>
                 {vista === VISTA.LISTADO && (

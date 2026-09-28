@@ -362,3 +362,123 @@ body {
     white-space: nowrap;
   }
 }
+/* ---------- Interaccion de botones: efecto "levantar pesa" ---------- */
+.boton {
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.15s ease,
+              background-color 0.15s ease;
+}
+
+.boton--primario:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(255, 106, 19, 0.35);
+}
+
+.boton--primario:active {
+  transform: translateY(-1px) scale(0.97);
+  box-shadow: 0 2px 6px rgba(255, 106, 19, 0.25);
+}
+
+.boton--fantasma:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(255, 255, 255, 0.06);
+}
+
+.boton--fantasma:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+.boton--peligro:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(229, 72, 77, 0.3);
+}
+
+.boton--peligro:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+/* Respeta a quien prefiere menos movimiento en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  .boton, .boton--primario, .boton--fantasma, .boton--peligro {
+    transition: background-color 0.15s ease;
+  }
+  .boton:hover, .boton:active {
+    transform: none;
+  }
+}
+
+/* ---------- Indicador de carga: disco de pesas girando ---------- */
+.cargando {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-dato);
+  font-size: 0.85rem;
+}
+
+.cargando__disco {
+  width: 28px;
+  height: 28px;
+  animation: girar-disco 0.9s linear infinite;
+}
+
+@keyframes girar-disco {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cargando__disco {
+    animation: none;
+  }
+}
+/* ---------- Indicador de modulo activo en la navegacion ---------- */
+.navegacion-principal .enlace {
+  text-decoration: none;
+}
+
+.enlace--activo {
+  color: var(--color-acento);
+  position: relative;
+}
+.enlace--activo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background-color: var(--color-acento);
+  border-radius: 1px;
+}
+/* ---------- Animacion de entrada de las alertas ---------- */
+.alerta {
+  animation: entrada-alerta 0.25s ease-out;
+}
+
+@keyframes entrada-alerta {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alerta {
+    animation: none;
+  }
+}
+/* ---------- Resaltado de fila al pasar el mouse ---------- */
+.tabla-clases tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.tabla-clases tbody tr:hover {
+  background-color: rgba(255, 106, 19, 0.06);
+}
