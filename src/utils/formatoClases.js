@@ -28,8 +28,25 @@ function normalizarHora(hora) {
   return `${horas.padStart(2, "0")}:${minutos.padStart(2, "0")}`;
 }
 
-function indiceDia(diaSemana) {
+// 0 = domingo ... 6 = sabado (igual que Date.getDay). -1 si no se reconoce
+export function indiceDia(diaSemana) {
   return DIAS_SEMANA.indexOf(normalizarTexto(diaSemana));
+}
+
+// Nombre del dia bien escrito a partir de su indice: 3 -> "Miércoles"
+export function nombreDia(indice) {
+  return NOMBRES_DIA[indice] ?? "";
+}
+
+// "miercoles" -> "Miércoles". Si no lo reconoce, solo lo capitaliza
+export function nombreDiaClase(diaSemana) {
+  const indice = indiceDia(diaSemana);
+  return indice === -1 ? capitalizar(diaSemana) : NOMBRES_DIA[indice];
+}
+
+// Orden de la semana empezando en lunes (para listas y filtros)
+export function ordenSemana(indice) {
+  return (indice + 6) % 7;
 }
 
 export function nombreDiaHoy(ahora = new Date()) {
@@ -103,6 +120,5 @@ export function proximasClases(clases, ahora = new Date()) {
 export function etiquetaDia(diasFaltan, diaSemana) {
   if (diasFaltan === 0) return "Hoy";
   if (diasFaltan === 1) return "Mañana";
-  const indice = indiceDia(diaSemana);
-  return indice === -1 ? capitalizar(diaSemana) : NOMBRES_DIA[indice];
+  return nombreDiaClase(diaSemana);
 }

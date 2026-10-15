@@ -1498,3 +1498,319 @@ body {
     transition: none;
   }
 }
+
+/* ==========================================================
+   CLASES Y HORARIOS: encabezado, filtros y tabla moderna
+   ========================================================== */
+
+/* Encabezado con boton a la derecha */
+.encabezado-pagina--con-accion {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- Buscador y selects ---------- */
+.barra-filtros {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.buscador {
+  position: relative;
+  flex: 1 1 260px;
+}
+
+.buscador__icono {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-texto-tenue);
+  pointer-events: none;
+}
+
+.buscador__campo,
+.filtro-select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  color: var(--color-texto);
+  font-family: var(--fuente-texto);
+  font-size: 0.88rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.buscador__campo {
+  padding-left: 2.3rem;
+}
+
+.buscador__campo::placeholder {
+  color: #7a7a7a;
+}
+
+.filtro-select {
+  flex: 0 1 200px;
+  width: auto;
+  cursor: pointer;
+}
+
+.buscador__campo:focus-visible,
+.filtro-select:focus-visible {
+  outline: none;
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(255, 106, 19, 0.15);
+}
+
+/* ---------- Botones de filtro por estado ---------- */
+.filtros-estado {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+
+.filtro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-texto);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.filtro-chip:hover {
+  color: var(--color-texto);
+  border-color: #4a4a4a;
+}
+
+.filtro-chip--activo,
+.filtro-chip--activo:hover {
+  background-color: rgba(255, 106, 19, 0.12);
+  border-color: var(--color-acento);
+  color: var(--color-acento);
+}
+
+.filtro-chip:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+.filtro-chip__conteo {
+  min-width: 1.3rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background-color: var(--color-superficie-alta);
+  font-family: var(--fuente-dato);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.listado-clases__resumen {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.1rem 0 0.75rem;
+}
+
+.listado-clases__resumen .enlace--pequeno {
+  margin-top: 0;
+}
+
+/* ---------- Estado vacio ---------- */
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1.5rem;
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--color-texto-tenue);
+  background-color: var(--color-superficie);
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.estado-vacio p {
+  margin: 0;
+}
+
+/* ---------- Tabla moderna ---------- */
+.tabla-contenedor {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  overflow-x: auto;
+}
+
+.tabla-clases--moderna {
+  margin-top: 0;
+}
+
+.tabla-clases--moderna th {
+  padding: 0.85rem 1rem;
+  background-color: #171717;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabla-clases--moderna td {
+  padding: 0.95rem 1rem;
+  vertical-align: middle;
+  font-family: var(--fuente-texto);
+  font-size: 0.88rem;
+}
+
+.tabla-clases--moderna tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-clases__id {
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-dato) !important;
+  font-size: 0.8rem !important;
+}
+
+.tabla-clases__nombre {
+  font-weight: 600;
+}
+
+.tabla-clases__dato {
+  font-family: var(--fuente-dato) !important;
+  white-space: nowrap;
+}
+
+/* Celda de cupo: numeros + barra + texto de disponibles */
+.celda-cupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 110px;
+}
+
+.celda-cupo__numeros {
+  font-family: var(--fuente-dato);
+  font-size: 0.85rem;
+}
+
+.celda-cupo__detalle {
+  color: var(--color-texto-tenue);
+  font-size: 0.72rem;
+}
+
+/* Botones de accion: el contenedor es un div para no romper la tabla */
+.fila-clase__acciones {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.boton--editar {
+  background-color: transparent;
+  color: var(--color-acento);
+  border-color: rgba(255, 106, 19, 0.6);
+}
+
+.boton--editar:hover {
+  background-color: rgba(255, 106, 19, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(255, 106, 19, 0.2);
+}
+
+.boton--editar:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+.badge-cupo {
+  white-space: nowrap;
+}
+
+/* ---------- Celular: cada fila se convierte en una tarjeta ---------- */
+@media (max-width: 760px) {
+  .filtro-select {
+    flex: 1 1 140px;
+  }
+
+  .tabla-contenedor {
+    background: none;
+    border: none;
+    overflow: visible;
+  }
+
+  .tabla-clases--moderna,
+  .tabla-clases--moderna tbody,
+  .tabla-clases--moderna tr,
+  .tabla-clases--moderna td {
+    display: block;
+    width: 100%;
+    white-space: normal;
+  }
+
+  .tabla-clases--moderna thead {
+    display: none;
+  }
+
+  .tabla-clases--moderna tr {
+    margin-bottom: 0.85rem;
+    padding: 0.4rem 1rem;
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+  }
+
+  .tabla-clases--moderna td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #262626;
+    text-align: right;
+  }
+
+  .tabla-clases--moderna tbody tr:last-child td {
+    border-bottom: 1px solid #262626;
+  }
+
+  .tabla-clases--moderna td:last-child {
+    border-bottom: none !important;
+    justify-content: flex-end;
+  }
+
+  .tabla-clases--moderna td::before {
+    content: attr(data-label);
+    color: var(--color-texto-tenue);
+    font-family: var(--fuente-texto);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: left;
+  }
+
+  .tabla-clases--moderna td:last-child::before {
+    content: none;
+  }
+
+  .celda-cupo {
+    align-items: flex-end;
+    min-width: 140px;
+  }
+
+  .celda-cupo .barra-ocupacion {
+    width: 100%;
+  }
+}

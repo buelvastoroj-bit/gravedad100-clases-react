@@ -1,4 +1,5 @@
 import BarraOcupacion from "./BarraOcupacion.jsx";
+import BadgeEstadoCupo from "./BadgeEstadoCupo.jsx";
 import { IconoClientes, IconoCalendario, IconoPesa, IconoTarjeta, IconoGrafica } from "./Iconos.jsx";
 import {
   capitalizar, estadoCupo, clasesDeHoy, contarEntrenadores,
@@ -75,10 +76,7 @@ export default function Dashboard({ clases, clientes, onVerClases }) {
                 <article key={clase.idClase} className="tarjeta-clase">
                   <div className="tarjeta-clase__cabecera">
                     <h4 className="tarjeta-clase__nombre">{capitalizar(clase.nombre)}</h4>
-                    <span className={`badge-cupo badge-cupo--${estado.tipo}`}>
-                      <span className="badge-cupo__disco" />
-                      {estado.texto}
-                    </span>
+                    <BadgeEstadoCupo clase={clase} />
                   </div>
 
                   <p className="tarjeta-clase__entrenador">Entrenador: {capitalizar(clase.entrenador)}</p>
