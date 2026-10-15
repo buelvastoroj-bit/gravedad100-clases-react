@@ -438,21 +438,52 @@ body {
 .navegacion-principal .enlace {
   text-decoration: none;
 }
+@property --angulo-borde {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
 
 .enlace--activo {
   color: var(--color-acento);
   position: relative;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
 }
-.enlace--activo::after {
+
+.enlace--activo::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 2px;
-  background-color: var(--color-acento);
-  border-radius: 1px;
+  inset: 0;
+  border-radius: 999px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--angulo-borde),
+    transparent 0deg,
+    var(--color-acento) 60deg,
+    transparent 140deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotar-borde 2.5s linear infinite;
+  pointer-events: none;
 }
+
+@keyframes rotar-borde {
+  to { --angulo-borde: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enlace--activo::before {
+    animation: none;
+    background: var(--color-acento);
+    mask: none;
+    -webkit-mask: none;
+    opacity: 0.4;
+  }
+}
+
 /* ---------- Animacion de entrada de las alertas ---------- */
 .alerta {
   animation: entrada-alerta 0.25s ease-out;
@@ -481,4 +512,715 @@ body {
 
 .tabla-clases tbody tr:hover {
   background-color: rgba(255, 106, 19, 0.06);
+}
+/* ---------- Pulso de disponibilidad en el badge de cupo ---------- */
+.badge-cupo--disponible .badge-cupo__disco {
+  animation: pulso-disponible 1.8s ease-in-out infinite;
+}
+
+@keyframes pulso-disponible {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 178, 115, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 178, 115, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-cupo--disponible .badge-cupo__disco {
+    animation: none;
+  }
+}
+/* ---------- Entrada de las ventanas modales ---------- */
+.modal-overlay {
+  animation: aparecer-fondo 0.2s ease-out;
+}
+
+.modal-caja {
+  animation: asentar-modal 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes aparecer-fondo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes asentar-modal {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay, .modal-caja {
+    animation: none;
+  }
+}
+/* ---------- Layout de la pantalla de acceso (login/registro) ---------- */
+.pantalla-acceso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+}
+.ilustracion-pesas {
+  width: 340px;
+  height: auto;
+  flex-shrink: 0;
+  animation: balanceo-suave 4s ease-in-out infinite;
+}
+
+@keyframes balanceo-suave {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes girar-lento {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ilustracion-pesas {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .ilustracion-pesas {
+    width: 160px;
+    height: 160px;
+  }
+}
+/* ---------- Ajustes de accesibilidad y contraste del login (feedback UX) ---------- */
+
+/* Mayor contraste en los bordes de los campos */
+.campo input,
+.campo select {
+  border: 1.5px solid #4a4a4a;
+  background-color: #1f1f1f;
+}
+
+.campo input:focus-visible,
+.campo select:focus-visible {
+  border-color: var(--color-acento);
+}
+
+/* Texto oscuro en el boton primario para mejor contraste */
+.boton--primario {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+/* Boton principal a todo el ancho, centrado */
+.formulario-clase__acciones--full {
+  display: flex;
+}
+.formulario-clase__acciones--full .boton {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Campo de contrasena con icono de ojo */
+.campo__con-icono {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.campo__con-icono input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+.campo__boton-ojo {
+  position: absolute;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  padding: 0.3rem;
+  color: var(--color-texto-tenue);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.campo__boton-ojo:hover {
+  color: var(--color-acento);
+}
+
+/* Enlace pequeno, tipo "Olvidaste tu contrasena" */
+.enlace--pequeno {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.4rem;
+  display: inline-block;
+}
+
+.pantalla-acceso .formulario-clase {
+  padding: 1.5rem 1.5rem 1.25rem;
+  max-width: 340px;
+}
+.pantalla-acceso .campo {
+  margin-bottom: 0.75rem;
+}
+
+/* Encabezado unificado: marca justo encima de la ilustracion */
+.bloque-marca {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.bloque-marca h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 2.25rem;
+  margin: 0;
+}
+.bloque-marca .cabecera__subtitulo {
+  margin: 0.15rem 0 0;
+}
+/* Columna que agrupa el nombre de la marca junto con la ilustracion */
+.columna-marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+/* ---------- Pantalla de acceso: fondo, tarjeta y responsive ---------- */
+
+/*
+  Fondo con la foto real del gimnasio (public/fondo-gym.jpg).
+  Encima van varias capas en este orden (la primera queda arriba):
+  1. Degradado oscuro de izquierda a derecha: deja ver un poco la foto
+     del lado de la marca y oscurece mas donde esta la tarjeta.
+  2. Degradado oscuro de abajo hacia arriba para que el piso no distraiga.
+  3. Reflector naranja suave detras de la ilustracion.
+  4. La foto, cubriendo todo el espacio.
+*/
+.pantalla-acceso {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin: -2rem -1.5rem;
+  padding: 3rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      to right,
+      rgba(12, 12, 12, 0.72) 0%,
+      rgba(12, 12, 12, 0.80) 45%,
+      rgba(12, 12, 12, 0.92) 100%
+    ),
+    linear-gradient(to top, rgba(12, 12, 12, 0.85) 0%, transparent 45%),
+    radial-gradient(ellipse 700px 500px at 30% 35%, rgba(255, 106, 19, 0.14), transparent 65%),
+    url("/fondo-gym.jpg");
+  background-size: cover;
+  background-position: 30% center;
+  background-repeat: no-repeat;
+  background-color: var(--color-fondo);
+}
+
+/* Particulas de tiza flotando cerca de la barra */
+.pantalla-acceso::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.35), transparent),
+    radial-gradient(1.5px 1.5px at 25% 45%, rgba(255,255,255,0.25), transparent),
+    radial-gradient(2px 2px at 33% 25%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 18% 55%, rgba(255,255,255,0.2), transparent),
+    radial-gradient(2px 2px at 28% 60%, rgba(255,255,255,0.28), transparent);
+  animation: flotar-tiza 6s ease-in-out infinite;
+}
+
+@keyframes flotar-tiza {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-14px); opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pantalla-acceso::after {
+    animation: none;
+  }
+}
+
+/* Sombra en el texto de la marca para que se lea bien sobre la foto */
+.pantalla-acceso .bloque-marca h1,
+.pantalla-acceso .bloque-marca .cabecera__subtitulo {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+.pantalla-acceso .bloque-marca .cabecera__subtitulo {
+  color: #d0d0d0;
+}
+
+@media (max-width: 700px) {
+  .pantalla-acceso {
+    margin: -1.5rem -1rem;
+    padding: 2rem 1rem;
+    /* En celular todo va apilado, asi que la capa oscura es pareja */
+    background:
+      linear-gradient(rgba(12, 12, 12, 0.85), rgba(12, 12, 12, 0.85)),
+      url("/fondo-gym.jpg");
+    background-size: cover;
+    background-position: 25% center;
+    background-repeat: no-repeat;
+    background-color: var(--color-fondo);
+  }
+}
+
+/* Tarjeta del formulario: fondo oscuro solido, sombra, borde sutil (sin borde naranja grueso) */
+.formulario-clase--acceso {
+  background-color: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Titulo del formulario con tipografia moderna (Inter), no Bebas Neue, sin mayusculas forzadas */
+.formulario-clase--acceso .formulario-clase__titulo {
+  font-family: var(--fuente-texto);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Responsive: en movil, todo se apila centrado (logo arriba, formulario abajo) */
+@media (max-width: 700px) {
+  .pantalla-acceso {
+    flex-direction: column;
+  }
+  .columna-marca {
+    text-align: center;
+  }
+}
+/* ---------- Inputs mejorados: placeholder, focus suave ---------- */
+.campo input::placeholder {
+  color: #8a8a8a;
+}
+
+.campo input,
+.campo select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input:focus-visible,
+.campo select:focus-visible {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(255, 106, 19, 0.15);
+  outline: none;
+}
+
+/* ---------- Boton primario: hover mas notorio + estado con spinner ---------- */
+.boton--primario:hover:not(:disabled) {
+  background-color: #ffb37a;
+}
+
+.boton--primario:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.boton__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.5rem;
+  border: 2px solid rgba(26, 26, 26, 0.3);
+  border-top-color: #1a1a1a;
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: girar-spinner 0.7s linear infinite;
+}
+
+@keyframes girar-spinner {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton__spinner { animation: none; }
+}
+
+/* ---------- Checkbox "Recordarme" ---------- */
+.campo-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -0.25rem 0 1rem;
+}
+.campo-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-acento);
+  cursor: pointer;
+}
+.campo-checkbox label {
+  font-size: 0.85rem;
+  color: var(--color-texto-tenue);
+  cursor: pointer;
+}
+/* Brillo sutil en el acento "100" de la marca */
+.bloque-marca .cabecera__acento {
+  background: linear-gradient(135deg, #ff6a13, #ffb37a, #ff6a13);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brillo-marca 3s ease-in-out infinite;
+}
+
+@keyframes brillo-marca {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloque-marca .cabecera__acento {
+    animation: none;
+  }
+}
+/* ---------- Confirmacion visual de registro exitoso ---------- */
+.confirmacion-exito {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.confirmacion-exito p {
+  color: var(--color-texto);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.confirmacion-exito__check circle {
+  stroke-dasharray: 158;
+  stroke-dashoffset: 158;
+  animation: dibujar-circulo 0.4s ease-out forwards;
+}
+.confirmacion-exito__check path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: dibujar-check 0.3s ease-out 0.35s forwards;
+}
+
+@keyframes dibujar-circulo {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes dibujar-check {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmacion-exito__check circle,
+  .confirmacion-exito__check path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Transicion suave al cambiar entre login y registro ---------- */
+.contenedor-formulario-acceso {
+  animation: entrada-formulario 0.25s ease-out;
+}
+
+@keyframes entrada-formulario {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contenedor-formulario-acceso {
+    animation: none;
+  }
+}
+
+/* ==========================================================
+   SISTEMA INTERNO: menu lateral, contenido y pantalla "Proximamente"
+   ========================================================== */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---------- Menu lateral ---------- */
+.barra-lateral {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  background-color: #161616;
+  border-right: 1px solid var(--color-borde);
+}
+
+.barra-lateral__marca {
+  padding: 0 0.5rem;
+}
+
+.barra-lateral__marca h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 2.1rem;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin: 0;
+}
+
+.barra-lateral__marca p {
+  margin: 0.35rem 0 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.78rem;
+}
+
+.menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 2rem;
+}
+
+.menu__opcion {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-texto);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu__opcion:hover {
+  background-color: var(--color-superficie-alta);
+  color: var(--color-texto);
+}
+
+.menu__opcion:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
+}
+
+.menu__opcion .icono {
+  flex-shrink: 0;
+}
+
+.menu__texto {
+  flex: 1;
+}
+
+/* Opcion activa: fondo naranja suave + barra naranja a la izquierda */
+.menu__opcion--activa,
+.menu__opcion--activa:hover {
+  background-color: rgba(255, 106, 19, 0.12);
+  color: var(--color-acento);
+  font-weight: 600;
+}
+
+.menu__opcion--activa::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--color-acento);
+}
+
+/* Etiqueta pequena para modulos en construccion */
+.menu__pronto {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto-tenue);
+}
+
+.menu__separador {
+  height: 1px;
+  margin: 1rem 0.5rem;
+  background-color: var(--color-borde);
+}
+
+.menu__opcion--salir:hover {
+  background-color: rgba(229, 72, 77, 0.1);
+  color: var(--color-error);
+}
+
+/* ---------- Zona principal ---------- */
+.app__principal {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__contenido {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Barra superior y fondo oscuro: solo se usan en celular */
+.barra-movil,
+.fondo-menu {
+  display: none;
+}
+
+/* Los modales quedan por encima del menu */
+.modal-overlay {
+  z-index: 40;
+}
+
+/* ---------- Pantalla "Proximamente" ---------- */
+.proximamente {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+  max-width: 520px;
+  margin: 3rem auto;
+  padding: 3rem 2rem;
+  background-color: var(--color-superficie);
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.proximamente__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: rgba(255, 106, 19, 0.12);
+  color: var(--color-acento);
+}
+
+.proximamente__icono .icono {
+  width: 30px;
+  height: 30px;
+}
+
+.proximamente__etiqueta {
+  margin-top: 0.5rem;
+  font-family: var(--fuente-dato);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-acento);
+}
+
+.proximamente__titulo {
+  margin: 0;
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.proximamente__texto {
+  margin: 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* ---------- Tablet y celular: el menu se esconde a la izquierda ---------- */
+@media (max-width: 900px) {
+  .barra-lateral {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .barra-lateral--abierta {
+    transform: translateX(0);
+  }
+
+  .fondo-menu {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background-color: rgba(0, 0, 0, 0.55);
+  }
+
+  .barra-movil {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 0.75rem 1rem;
+    background-color: #161616;
+    border-bottom: 1px solid var(--color-borde);
+  }
+
+  .barra-movil__boton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    background: none;
+    color: var(--color-texto);
+    cursor: pointer;
+  }
+
+  .barra-movil__marca {
+    font-family: var(--fuente-titulo);
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .app__contenido {
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra-lateral {
+    transition: none;
+  }
 }
