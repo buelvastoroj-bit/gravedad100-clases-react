@@ -1814,3 +1814,38 @@ body {
     width: 100%;
   }
 }
+
+/* ==========================================================
+   CLIENTES: celda con iniciales (avatar)
+   ========================================================== */
+.celda-persona {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.celda-persona__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 106, 19, 0.14);
+  color: var(--color-acento);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.celda-tenue {
+  color: var(--color-texto-tenue);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .celda-persona {
+    flex-direction: row-reverse;
+  }
+}
