@@ -1224,3 +1224,277 @@ body {
     transition: none;
   }
 }
+
+/* ==========================================================
+   DASHBOARD
+   ========================================================== */
+
+/* Encabezado de pagina reutilizable (titulo + subtitulo) */
+.encabezado-pagina {
+  margin-bottom: 1.75rem;
+}
+
+.encabezado-pagina__titulo {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.encabezado-pagina__subtitulo {
+  margin: 0.3rem 0 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.92rem;
+}
+
+/* ---------- Tarjetas de resumen ---------- */
+.tarjetas-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta-estadistica {
+  position: relative;
+  overflow: hidden;
+  padding: 1.15rem 1.25rem;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Linea naranja fina arriba de cada tarjeta */
+.tarjeta-estadistica::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-acento), transparent 70%);
+}
+
+.tarjeta-estadistica:hover {
+  border-color: #474747;
+  transform: translateY(-2px);
+}
+
+.tarjeta-estadistica__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tarjeta-estadistica__etiqueta {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-texto-tenue);
+}
+
+.tarjeta-estadistica__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background-color: rgba(255, 106, 19, 0.12);
+  color: var(--color-acento);
+}
+
+.tarjeta-estadistica__icono .icono {
+  width: 18px;
+  height: 18px;
+}
+
+.tarjeta-estadistica__valor {
+  margin: 0.6rem 0 0.15rem;
+  font-family: var(--fuente-titulo);
+  font-size: 2.6rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.tarjeta-estadistica__detalle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-texto-tenue);
+}
+
+/* Tarjetas de modulos que aun no existen: mas apagadas */
+.tarjeta-estadistica--pronto {
+  border-style: dashed;
+}
+
+.tarjeta-estadistica--pronto::before {
+  background: linear-gradient(90deg, #4a4a4a, transparent 70%);
+}
+
+.tarjeta-estadistica--pronto .tarjeta-estadistica__icono {
+  background-color: var(--color-superficie-alta);
+  color: var(--color-texto-tenue);
+}
+
+.tarjeta-estadistica--pronto .tarjeta-estadistica__valor {
+  color: #555555;
+}
+
+.tarjeta-estadistica__pronto {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-borde);
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Seccion "Proximas clases" ---------- */
+.seccion-dashboard {
+  margin-top: 2.25rem;
+}
+
+.seccion-dashboard__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.seccion-dashboard__titulo {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.seccion-dashboard__vacio {
+  color: var(--color-texto-tenue);
+}
+
+.lista-proximas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta-clase {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.15rem 1.25rem;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  transition: border-color 0.2s ease;
+}
+
+.tarjeta-clase:hover {
+  border-color: rgba(255, 106, 19, 0.45);
+}
+
+.tarjeta-clase__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tarjeta-clase__nombre {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.tarjeta-clase__entrenador {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-texto-tenue);
+}
+
+.tarjeta-clase__horario {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.tarjeta-clase__dia {
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  background-color: var(--color-superficie-alta);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.tarjeta-clase__dia--hoy {
+  background-color: rgba(255, 106, 19, 0.15);
+  color: var(--color-acento);
+}
+
+.tarjeta-clase__hora {
+  font-family: var(--fuente-dato);
+}
+
+.tarjeta-clase__cupo {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fuente-dato);
+  font-size: 0.78rem;
+  color: var(--color-texto-tenue);
+}
+
+/* ---------- Barra de ocupacion ---------- */
+.barra-ocupacion {
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--color-superficie-alta);
+  overflow: hidden;
+}
+
+.barra-ocupacion__relleno {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.barra-ocupacion__relleno--disponible { background-color: var(--color-exito); }
+.barra-ocupacion__relleno--pocos { background-color: #f5a524; }
+.barra-ocupacion__relleno--lleno { background-color: var(--color-error); }
+
+/* Nuevo estado del badge: quedan pocos cupos */
+.badge-cupo--pocos {
+  background-color: rgba(245, 165, 36, 0.14);
+  color: #f5a524;
+}
+
+@media (max-width: 600px) {
+  .encabezado-pagina__titulo {
+    font-size: 1.45rem;
+  }
+
+  .tarjetas-resumen {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .tarjeta-estadistica__valor {
+    font-size: 2.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-estadistica,
+  .barra-ocupacion__relleno {
+    transition: none;
+  }
+}

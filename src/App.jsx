@@ -20,6 +20,7 @@ import MensajeAlerta from "./components/MensajeAlerta.jsx";
 import IndicadorCarga from "./components/IndicadorCarga.jsx";
 import IlustracionPesas from "./components/IlustracionPesas.jsx";
 import ModuloProximamente from "./components/ModuloProximamente.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 import {
   IconoDashboard, IconoClientes, IconoCalendario, IconoPesa, IconoTarjeta,
   IconoGrafica, IconoAuriculares, IconoAjustes, IconoSalir, IconoMenu,
@@ -41,11 +42,6 @@ const MODULO = {
 
 // Modulos que aun no estan construidos: se muestran con la pantalla "Proximamente"
 const MODULOS_PROXIMAMENTE = {
-  [MODULO.DASHBOARD]: {
-    titulo: "Dashboard",
-    descripcion: "Aquí verás el resumen general del gimnasio: clientes, clases del día y próximas clases.",
-    Icono: IconoDashboard,
-  },
   [MODULO.MEMBRESIAS]: {
     titulo: "Membresías y pagos",
     descripcion: "Aquí podrás registrar los pagos de los clientes y saber quién está al día.",
@@ -91,7 +87,7 @@ export default function App() {
     registrarSolicitud, resolverSolicitud, limpiarMensaje: limpiarMensajeSolicitudes,
   } = useSolicitudes();
 
-  const [moduloActivo, setModuloActivo] = useState(MODULO.CLASES);
+  const [moduloActivo, setModuloActivo] = useState(MODULO.DASHBOARD);
   const [vista, setVista] = useState(VISTA.LOGIN);
   const [idEnEdicion, setIdEnEdicion] = useState(null);
   const [idParaEliminar, setIdParaEliminar] = useState(null);
@@ -108,7 +104,7 @@ export default function App() {
   function manejarConfirmarEliminar() { eliminarClase(idParaEliminar); setIdParaEliminar(null); }
 
   function manejarCerrarSesion() {
-    cerrarSesion(); setVista(VISTA.LOGIN); setModuloActivo(MODULO.CLASES); setMenuAbierto(false);
+    cerrarSesion(); setVista(VISTA.LOGIN); setModuloActivo(MODULO.DASHBOARD); setMenuAbierto(false);
   }
   async function manejarIniciarSesion(usuario, contrasena) { await iniciarSesion(usuario, contrasena); }
 
@@ -197,6 +193,14 @@ export default function App() {
           descripcion={proximamente.descripcion}
           Icono={proximamente.Icono}
         />
+      );
+    }
+
+    if (moduloActivo === MODULO.DASHBOARD) {
+      return cargando || cargandoClientes ? (
+        <IndicadorCarga texto="Cargando el resumen del gimnasio..." />
+      ) : (
+        <Dashboard clases={clases} clientes={clientes} onVerClases={irAModuloClases} />
       );
     }
 
