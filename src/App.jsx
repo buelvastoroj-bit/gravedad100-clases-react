@@ -21,6 +21,7 @@ import IndicadorCarga from "./components/IndicadorCarga.jsx";
 import IlustracionPesas from "./components/IlustracionPesas.jsx";
 import ModuloProximamente from "./components/ModuloProximamente.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import Reportes from "./components/Reportes.jsx";
 import {
   IconoDashboard, IconoClientes, IconoCalendario, IconoPesa, IconoTarjeta,
   IconoGrafica, IconoAuriculares, IconoAjustes, IconoSalir, IconoMenu,
@@ -46,11 +47,6 @@ const MODULOS_PROXIMAMENTE = {
     titulo: "Membresías y pagos",
     descripcion: "Aquí podrás registrar los pagos de los clientes y saber quién está al día.",
     Icono: IconoTarjeta,
-  },
-  [MODULO.REPORTES]: {
-    titulo: "Reportes",
-    descripcion: "Aquí podrás consultar reportes de asistencia, clases e ingresos.",
-    Icono: IconoGrafica,
   },
   [MODULO.CONFIGURACION]: {
     titulo: "Configuración",
@@ -201,6 +197,14 @@ export default function App() {
         <IndicadorCarga texto="Cargando el resumen del gimnasio..." />
       ) : (
         <Dashboard clases={clases} clientes={clientes} onVerClases={irAModuloClases} />
+      );
+    }
+
+    if (moduloActivo === MODULO.REPORTES) {
+      return cargando || cargandoClientes || cargandoSolicitudes ? (
+        <IndicadorCarga texto="Cargando datos para los reportes..." />
+      ) : (
+        <Reportes clases={clases} clientes={clientes} solicitudes={solicitudes} />
       );
     }
 
