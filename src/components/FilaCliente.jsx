@@ -1,14 +1,4 @@
-import { capitalizar } from "../utils/formatoClases.js";
-
-// "jean carlos buelvas" -> "JC"
-function iniciales(nombre) {
-  return String(nombre ?? "")
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((palabra) => palabra.charAt(0).toUpperCase())
-    .join("");
-}
+import { capitalizar, iniciales } from "../utils/formatoClases.js";
 
 // Muestra la fecha de registro como "10 sept 2026". Si no se puede leer, la deja igual.
 function formatearFecha(valor) {

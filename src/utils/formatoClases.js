@@ -22,6 +22,22 @@ export function capitalizar(texto) {
     .join(" ");
 }
 
+// "perder PESO" -> "Perder peso" (solo la primera letra en mayuscula)
+export function capitalizarFrase(texto) {
+  const limpio = String(texto ?? "").trim();
+  return limpio.charAt(0).toUpperCase() + limpio.slice(1).toLowerCase();
+}
+
+// "jean carlos buelvas" -> "JC"
+export function iniciales(nombre) {
+  return String(nombre ?? "")
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((palabra) => palabra.charAt(0).toUpperCase())
+    .join("");
+}
+
 // "6:00" -> "06:00", para poder comparar horas como texto
 function normalizarHora(hora) {
   const [horas = "0", minutos = "0"] = String(hora ?? "").split(":");
