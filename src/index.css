@@ -1891,3 +1891,73 @@ body {
     max-width: none;
   }
 }
+
+/* ==========================================================
+   ATENCION AL CLIENTE: estado de la solicitud y celda de texto
+   ========================================================== */
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.estado-badge__punto {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Pendiente: amarillo de advertencia (no es un error, es algo por hacer) */
+.estado-badge--pendiente {
+  background-color: rgba(245, 165, 36, 0.14);
+  color: #f5a524;
+}
+
+.estado-badge--resuelta {
+  background-color: rgba(59, 178, 115, 0.12);
+  color: var(--color-exito);
+}
+
+/* Asunto arriba en negrita y descripcion debajo en gris */
+.celda-solicitud {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 320px;
+}
+
+.celda-solicitud__asunto {
+  font-weight: 600;
+}
+
+.celda-solicitud__descripcion {
+  color: var(--color-texto-tenue);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* Marca amarilla a la izquierda en las solicitudes pendientes */
+.tabla-clases--moderna tr.fila-pendiente td:first-child {
+  box-shadow: inset 3px 0 0 #f5a524;
+}
+
+@media (max-width: 760px) {
+  .celda-solicitud {
+    max-width: none;
+    align-items: flex-end;
+  }
+
+  .tabla-clases--moderna tr.fila-pendiente td:first-child {
+    box-shadow: none;
+  }
+
+  .tabla-clases--moderna tr.fila-pendiente {
+    border-left: 3px solid #f5a524;
+  }
+}
