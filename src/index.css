@@ -2183,3 +2183,163 @@ body {
     transition: none;
   }
 }
+
+/* ==========================================================
+   FORMULARIOS MODERNOS (crear y editar)
+   Se usan con la clase "formulario-moderno" para no afectar el login.
+   ========================================================== */
+.formulario-pagina {
+  max-width: 760px;
+}
+
+.enlace-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-texto-tenue);
+  font-family: var(--fuente-texto);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.enlace-volver:hover {
+  color: var(--color-acento);
+}
+
+.formulario-moderno {
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.formulario-moderno__cabecera {
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--color-borde);
+  background: linear-gradient(180deg, rgba(255, 106, 19, 0.06), transparent);
+}
+
+.formulario-moderno__titulo {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.formulario-moderno__subtitulo {
+  margin: 0.3rem 0 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.88rem;
+}
+
+.formulario-moderno__grupo {
+  margin: 0;
+  padding: 1.35rem 1.75rem 0.4rem;
+  border: none;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.formulario-moderno__leyenda {
+  float: left;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0;
+  color: var(--color-acento);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Campos lado a lado: dos columnas (o tres) que bajan a una en celular */
+.rejilla-campos {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.1rem;
+}
+
+.rejilla-campos--tres {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.formulario-moderno .campo {
+  margin-bottom: 1rem;
+}
+
+.formulario-moderno .campo label {
+  color: var(--color-texto);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.formulario-moderno .campo input,
+.formulario-moderno .campo select {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  font-family: var(--fuente-texto);
+  font-size: 0.92rem;
+}
+
+/* Iconos de reloj y calendario en blanco sobre el fondo oscuro */
+.formulario-moderno input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+.formulario-moderno .campo select {
+  cursor: pointer;
+}
+
+.campo__ayuda {
+  margin: 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.76rem;
+}
+
+.formulario-moderno__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.1rem 1.75rem;
+  background-color: #171717;
+}
+
+.formulario-moderno__nota {
+  margin: 0;
+  color: var(--color-texto-tenue);
+  font-size: 0.78rem;
+}
+
+.formulario-moderno__acciones {
+  display: flex;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .rejilla-campos,
+  .rejilla-campos--tres {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-moderno__cabecera,
+  .formulario-moderno__grupo,
+  .formulario-moderno__pie {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+
+  .formulario-moderno__acciones {
+    width: 100%;
+  }
+
+  .formulario-moderno__acciones .boton {
+    flex: 1;
+  }
+}
