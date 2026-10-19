@@ -2343,3 +2343,129 @@ body {
     flex: 1;
   }
 }
+
+/* ---------- Formularios: cuadro de texto grande ---------- */
+.formulario-moderno .campo textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.65rem 0.8rem;
+  resize: vertical;
+  background-color: #1f1f1f;
+  border: 1.5px solid #4a4a4a;
+  border-radius: 8px;
+  color: var(--color-texto);
+  font-family: var(--fuente-texto);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario-moderno .campo textarea::placeholder {
+  color: #8a8a8a;
+}
+
+.formulario-moderno .campo textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(255, 106, 19, 0.15);
+}
+
+.formulario-moderno .campo select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Etiqueta de un grupo de opciones (no es un label normal) */
+.campo__etiqueta {
+  color: var(--color-texto);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+/* ---------- Selector de opciones tipo botones (nivel) ---------- */
+.selector-opciones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+  padding: 0.25rem;
+  background-color: #1f1f1f;
+  border: 1.5px solid #4a4a4a;
+  border-radius: 8px;
+}
+
+.selector-opciones__opcion {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.35rem;
+  border-radius: 6px;
+  color: var(--color-texto-tenue);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* El circulo del radio se esconde, pero sigue funcionando con teclado */
+.selector-opciones__opcion input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.selector-opciones__opcion:hover {
+  color: var(--color-texto);
+}
+
+.selector-opciones__opcion:has(input:focus-visible) {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
+}
+
+.selector-opciones__opcion--activa.selector-opciones__opcion--principiante {
+  background-color: rgba(59, 178, 115, 0.15);
+  color: var(--color-exito);
+}
+
+.selector-opciones__opcion--activa.selector-opciones__opcion--intermedio {
+  background-color: rgba(245, 165, 36, 0.16);
+  color: #f5a524;
+}
+
+.selector-opciones__opcion--activa.selector-opciones__opcion--avanzado {
+  background-color: rgba(255, 106, 19, 0.16);
+  color: var(--color-acento);
+}
+
+/* ---------- Correcciones del formulario de planes ---------- */
+
+/* Un campo suelto dentro de una seccion baja debajo del titulo de la seccion */
+.formulario-moderno__grupo > .campo {
+  clear: both;
+}
+
+/* Los botones de nivel son "label", asi que necesitan mas prioridad que
+   la regla general de las etiquetas del formulario */
+.formulario-moderno .campo .selector-opciones__opcion {
+  color: var(--color-texto-tenue);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.formulario-moderno .campo .selector-opciones__opcion:hover {
+  color: var(--color-texto);
+}
+
+.formulario-moderno .campo .selector-opciones__opcion--activa.selector-opciones__opcion--principiante {
+  color: var(--color-exito);
+}
+
+.formulario-moderno .campo .selector-opciones__opcion--activa.selector-opciones__opcion--intermedio {
+  color: #f5a524;
+}
+
+.formulario-moderno .campo .selector-opciones__opcion--activa.selector-opciones__opcion--avanzado {
+  color: var(--color-acento);
+}
