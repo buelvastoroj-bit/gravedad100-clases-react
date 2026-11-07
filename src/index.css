@@ -2469,3 +2469,12 @@ body {
 .formulario-moderno .campo .selector-opciones__opcion--activa.selector-opciones__opcion--avanzado {
   color: var(--color-acento);
 }
+
+/* ---------- Campo de contrasena con ojo dentro de formularios modernos ---------- */
+.formulario-moderno .campo__con-icono input {
+  padding-right: 2.6rem;
+}
+
+.configuracion .formulario-pagina .alerta {
+  max-width: 760px;
+}

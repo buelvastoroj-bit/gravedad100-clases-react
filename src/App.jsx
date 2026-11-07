@@ -22,6 +22,7 @@ import IlustracionPesas from "./components/IlustracionPesas.jsx";
 import ModuloProximamente from "./components/ModuloProximamente.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import Reportes from "./components/Reportes.jsx";
+import Configuracion from "./components/Configuracion.jsx";
 import {
   IconoDashboard, IconoClientes, IconoCalendario, IconoPesa, IconoTarjeta,
   IconoGrafica, IconoAuriculares, IconoAjustes, IconoSalir, IconoMenu,
@@ -47,11 +48,6 @@ const MODULOS_PROXIMAMENTE = {
     titulo: "Membresías y pagos",
     descripcion: "Aquí podrás registrar los pagos de los clientes y saber quién está al día.",
     Icono: IconoTarjeta,
-  },
-  [MODULO.CONFIGURACION]: {
-    titulo: "Configuración",
-    descripcion: "Aquí podrás ajustar los datos del gimnasio y los usuarios del sistema.",
-    Icono: IconoAjustes,
   },
 };
 
@@ -206,6 +202,10 @@ export default function App() {
       ) : (
         <Reportes clases={clases} clientes={clientes} solicitudes={solicitudes} />
       );
+    }
+
+    if (moduloActivo === MODULO.CONFIGURACION) {
+      return <Configuracion />;
     }
 
     if (moduloActivo === MODULO.CLIENTES) {
