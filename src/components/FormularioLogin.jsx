@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { obtenerEstadoRegistro } from "../api/authApi.js";
 
 export default function FormularioLogin({ onIniciarSesion, onIrARegistro, cargando }) {
   const [usuario, setUsuario] = useState("");
@@ -6,6 +7,24 @@ export default function FormularioLogin({ onIniciarSesion, onIrARegistro, cargan
   const [recordarme, setRecordarme] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [errores, setErrores] = useState({});
+  // null = todavia no se sabe (la API puede tardar en despertar en Render)
+  const [registroAbierto, setRegistroAbierto] = useState(null);
+
+  // Pregunta a la API si cualquiera puede registrarse (solo cuando no hay usuarios)
+  useEffect(() => {
+    let activo = true;
+    obtenerEstadoRegistro()
+      .then((respuesta) => {
+        if (activo) setRegistroAbierto(Boolean(respuesta.registroAbierto));
+      })
+      .catch(() => {
+        // Si no se puede consultar, se asume cerrado: es la opcion mas segura
+        if (activo) setRegistroAbierto(false);
+      });
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   function manejarEnvio(evento) {
     evento.preventDefault();
@@ -93,12 +112,20 @@ export default function FormularioLogin({ onIniciarSesion, onIrARegistro, cargan
         </button>
       </div>
 
-      <p style={{ marginTop: "1.25rem", fontSize: "0.85rem", color: "var(--color-texto-tenue)" }}>
-        ¿No tienes cuenta?{" "}
-        <button type="button" className="enlace" onClick={onIrARegistro}>
-          Regístrate
-        </button>
-      </p>
+      {/* Mientras se consulta la API no se muestra nada, para que el enlace no aparezca y desaparezca */}
+      {registroAbierto === true && (
+        <p style={{ marginTop: "1.25rem", fontSize: "0.85rem", color: "var(--color-texto-tenue)" }}>
+          ¿Primera vez en el sistema?{" "}
+          <button type="button" className="enlace" onClick={onIrARegistro}>
+            Crea la cuenta del administrador
+          </button>
+        </p>
+      )}
+      {registroAbierto === false && (
+        <p style={{ marginTop: "1.25rem", fontSize: "0.85rem", color: "var(--color-texto-tenue)" }}>
+          ¿No tienes cuenta? Pídele al administrador del gimnasio que te cree una.
+        </p>
+      )}
     </form>
   );
 }
