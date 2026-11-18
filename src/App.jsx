@@ -23,13 +23,14 @@ import ModuloProximamente from "./components/ModuloProximamente.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import Reportes from "./components/Reportes.jsx";
 import Configuracion from "./components/Configuracion.jsx";
+import PaginaPublica from "./components/publico/PaginaPublica.jsx";
 import {
   IconoDashboard, IconoClientes, IconoCalendario, IconoPesa, IconoTarjeta,
   IconoGrafica, IconoAuriculares, IconoAjustes, IconoSalir, IconoMenu,
 } from "./components/Iconos.jsx";
 
 const VISTA = {
-  LOGIN: "login", REGISTRO: "registro",
+  INICIO: "inicio", LOGIN: "login", REGISTRO: "registro",
   LISTADO: "listado", NUEVA: "nueva", EDITAR: "editar",
   LISTADO_CLIENTES: "listadoClientes", NUEVO_CLIENTE: "nuevoCliente",
   LISTADO_PLANES: "listadoPlanes", NUEVO_PLAN: "nuevoPlan",
@@ -80,7 +81,7 @@ export default function App() {
   } = useSolicitudes();
 
   const [moduloActivo, setModuloActivo] = useState(MODULO.DASHBOARD);
-  const [vista, setVista] = useState(VISTA.LOGIN);
+  const [vista, setVista] = useState(VISTA.INICIO);
   const [idEnEdicion, setIdEnEdicion] = useState(null);
   const [idParaEliminar, setIdParaEliminar] = useState(null);
   const [idPlanParaEliminar, setIdPlanParaEliminar] = useState(null);
@@ -140,11 +141,29 @@ export default function App() {
   const claseEnEdicion = idEnEdicion != null ? buscarClasePorId(idEnEdicion) : undefined;
 
   // ---------- Pantalla de acceso (sin sesion iniciada) ----------
+  // ---------- Pagina publica (lo primero que ve un visitante) ----------
+  if (!autenticado && vista === VISTA.INICIO) {
+    return (
+      <PaginaPublica
+        clases={clases}
+        cargando={cargando}
+        onIniciarSesion={() => { limpiarMensajeAuth(); setVista(VISTA.LOGIN); }}
+      />
+    );
+  }
+
   if (!autenticado) {
     return (
       <div className="pagina">
         <main className="contenido">
           <div className="pantalla-acceso">
+            <button
+              type="button"
+              className="acceso-volver"
+              onClick={() => { limpiarMensajeAuth(); setVista(VISTA.INICIO); }}
+            >
+              ← Volver al inicio
+            </button>
             <div className="columna-marca">
               <div className="bloque-marca">
                 <h1>GRAVEDAD<span className="cabecera__acento">100</span></h1>
